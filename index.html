@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynamic Page Example</title>
+</head>
+<body>
+  <h1>Dynamic Page Example</h1>
+  
+  <label for="input1">Input 1:</label>
+  <textarea id="input1" oninput="autoPopulateInputs()" placeholder="Enter text for Input 1"></textarea><br>
+
+  <label for="input2">Input 2:</label>
+  <textarea id="input2" placeholder="Enter text for Input 2"></textarea><br>
+
+  <label for="input3">Input 3:</label>
+  <textarea id="input3" placeholder="Enter text for Input 3"></textarea><br>
+
+  <label for="input4">Input 4:</label>
+  <textarea id="input4" placeholder="Enter text for Input 4"></textarea><br>
+
+  <button id="toggleMainText">Toggle Main Text</button>
+  <button id="showAllContent">Show All Main Text</button>
+  <div id="mainText"></div>
+
+  <div id="section1" style="display: none;">
+    <h2>Section 1</h2>
+    <div id="collectedFirstSection"></div>
+  </div>
+  
+  <div id="section2" style="display: none;">
+    <h2>Section 2</h2>
+    <div id="collectedSecondSection"></div>
+  </div>
+
+  <script>
+    var valuesArray = [
+      { input1: "123", input2: "value12", input3: "value13", input4: "value14" },
+      { input1: "456", input2: "value22", input3: "value23", input4: "value24" },
+      // Add more values as needed
+    ];
+
+    var mainTextVisible = false;
+    var consecutiveNumber = 1;
+
+    function autoPopulateInputs() {
+      var input1Value = document.getElementById("input1").value;
+      var matchingValue = valuesArray.find(function(item) {
+        return item.input1 === input1Value;
+      });
+
+      if (matchingValue) {
+        document.getElementById("input2").value = matchingValue.input2;
+        document.getElementById("input3").value = matchingValue.input3;
+        document.getElementById("input4").value = matchingValue.input4;
+      } else {
+        document.getElementById("input2").value = "";
+        document.getElementById("input3").value = "";
+        document.getElementById("input4").value = "";
+      }
+    }
+
+    function toggleMainText() {
+      mainTextVisible = !mainTextVisible;
+      var mainText = document.getElementById("mainText");
+      var toggleButton = document.getElementById("toggleMainText");
+
+      if (mainTextVisible) {
+        mainText.style.display = "block";
+        toggleButton.textContent = "Hide Main Text";
+        updateMainTextContent();
+      } else {
+        mainText.style.display = "none";
+        toggleButton.textContent = "Show Main Text";
+        mainText.innerHTML = ""; // Clear main text content when hiding
+      }
+    }
+
+    function updateMainTextContent() {
+      var input1Value = document.getElementById("input1").value;
+      var input2Value = document.getElementById("input2").value;
+      var input3Value = document.getElementById("input3").value;
+
+      var mainText = document.getElementById("mainText");
+      var hyperlink = `<a href="#" onclick="showSecondContent(${consecutiveNumber})">${consecutiveNumber}</a>`;
+      mainText.innerHTML += `<p>${hyperlink}: ${input1Value} Good day ${input2Value}.</p>`;
+      mainText.innerHTML += `<p id="secondContent${consecutiveNumber}" style="display: none;">${hyperlink}: ${input1Value} Good night ${input3Value}</p>`;
+      
+      consecutiveNumber++;
+    }
+
+    function showSecondContent(number) {
+      var secondContent = document.getElementById(`secondContent${number}`);
+      if (secondContent.style.display === "none") {
+        secondContent.style.display = "block";
+      } else {
+        secondContent.style.display = "none";
+      }
+    }
+
+    function showAllMainText() {
+      var mainText = document.getElementById("mainText");
+      var showAllButton = document.getElementById("showAllContent");
+
+      if (mainText.style.display === "none") {
+        mainText.style.display = "block";
+        showAllButton.textContent = "Hide All Main Text";
+        updateAllMainTextContent();
+      } else {
+        mainText.style.display = "none";
+        showAllButton.textContent = "Show All Main Text";
+        mainText.innerHTML = ""; // Clear main text content when hiding
+      }
+    }
+
+    function updateAllMainTextContent() {
+      var mainText = document.getElementById("mainText");
+      mainText.innerHTML = ""; // Clear existing content
+
+      valuesArray.forEach(function(item, index) {
+        var input1Value = item.input1;
+        var input2Value = item.input2;
+        var input3Value = item.input3;
+        var hyperlink = `<a href="#" onclick="showSecondContent(${index + 1})">${index + 1}</a>`;
+        mainText.innerHTML += `<p>${hyperlink}: ${input1Value} Good day ${input2Value}.</p>`;
+        mainText.innerHTML += `<p id="secondContent${index + 1}" style="display: none;">${hyperlink}: ${input1Value} Good night ${input3Value}</p>`;
+      });
+    }
+
+    function toggleSection1() {
+      var section1 = document.getElementById("section1");
+      if (section1.style.display === "none") {
+        section1.style.display = "block";
+      } else {
+        section1.style.display = "none";
+      }
+    }
+
+    function toggleSection2() {
+      var section2 = document.getElementById("section2");
+      if (section2.style.display === "none") {
+        section2.style.display = "block";
+      } else {
+        section2.style.display = "none";
+      }
+    }
+
+    document.getElementById("toggleMainText").addEventListener("click", toggleMainText);
+    document.getElementById("showAllContent").addEventListener("click", showAllMainText);
+
+    
+  </script>
+</body>
+</html>
